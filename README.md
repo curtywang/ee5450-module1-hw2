@@ -1,18 +1,24 @@
-# EE 5450 Module 1, Homework 1
-Building a FastAPI-based Web API for Multi-user, Multi-game Blackjack
+# EE 5450 Module 1, Homework 2
+Securing and Authenticating your FastAPI-based Web API for Multi-user, Multi-game Blackjack
 
 # Introduction
 
-In this assignment, you'll be making a Web API using asyncio and FastAPI to make a game server for Blackjack.
-Below is a specification of all of the paths (URLs) you should handle, along with their expected responses.
-I've made a class called `AsyncBlackjackDB`, which I used to make a global at the top of `web_blackjack.py` named `BLACKJACK_DB`.
-`AsyncBlackjackDB` simulates a game database (with some sleep calls) of which you can add, get, or delete
-Blackjack games.  Your job is to create the handlers below that will use functions (methods) that `AsyncBlackjackDB`
-provides to provide a web-based interface to play Blackjack with!
+In this assignment, you'll be making adding HTTPS/TLS support and user authentication (account creation/login) to your 
+Blackjack server Web API.  To facilitate this, I've created a folder named `keys` where you should put your self-signed 
+public/private keys made with [mkcert](https://github.com/FiloSottile/mkcert/releases).  The public certificate 
+should be named `public.pem` and the private key should be named `private.pem`.  I've also made a new Python module 
+named `user_db.py`, which will guide you through writing authentication middleware for your Web API.  Then, when you are
+done writing the authentication middleware, you will add usage of the authentication middleware to your Web API.
 
-As usual, unit tests have been provided to help guide you.  You can read the docstrings in blackjack_db.py to see what you can call.
+To get started, make sure all packages in `requirements.txt` are installed: `conda install --file requirements.txt`
 
-# HTTP Paths and Responses
+Then, open up `user_db.py` and `test_user_db.py`.  The UserDB class will 
+
+However, this time you will write your own unit tests for `user_db.py` inside `test_user_db.py`.  I will have my
+own unit tests, but this lets you practice another new skill.  
+
+
+# Web API HTTP Paths and Responses
 
 ## home()
 ```
