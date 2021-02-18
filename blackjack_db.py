@@ -1,6 +1,6 @@
 from uuid import uuid4
 from typing import List, Tuple, Dict, Union
-from .blackjack.blackjack import Blackjack
+from blackjack.blackjack import Blackjack
 from user_db import UserDB
 from dataclasses import dataclass
 from fastapi import HTTPException, status
