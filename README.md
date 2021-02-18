@@ -31,8 +31,10 @@ a surefire way to get your authentication information sniffed out!  All failed a
 
 The [FastAPI HTTP Basic Auth](https://fastapi.tiangolo.com/advanced/security/http-basic-auth/) docs go over the 
 built-in modules for ensuring that Web API calls are made with credentials.  The `HTTPBasicCredentials` object type
-contains the username and password data sent when using HTTP Basic Authentication.  The methods in the 
-`AsyncBlackjackGameDB` class will be modified to accept objects of this type.
+contains the username and password data sent when using HTTP Basic Authentication.  The functions in 
+`web_blackjack.py` should be modified to accept objects of this type.  You'll only need the shorter code on that
+link, but you can also read the rest of the document to see how they approach it.  We're going to use `pynacl` to
+generate, store, and compare password hashes instead of `secrets.compare_digest()`.
 
 
 # **Updated** Web API HTTP Paths and Responses
