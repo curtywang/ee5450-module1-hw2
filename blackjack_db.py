@@ -5,7 +5,7 @@ import asyncio
 
 
 class AsyncBlackjackGameDB(object):
-    def __init__(self):
+    def __init__(self, ):
         self._current_games: Dict[str, Blackjack] = {}
         self._termination_passwords: Dict[str, str] = {}
         self._QUERY_TIME: float = 0.05
