@@ -2,9 +2,11 @@ import uvicorn
 from typing import Optional
 from fastapi import FastAPI, HTTPException, Path, status, Query
 from blackjack_db import AsyncBlackjackGameDB, Blackjack
+from user_db import UserDB
 
 
-BLACKJACK_DB = AsyncBlackjackGameDB()
+USER_DB = UserDB()
+BLACKJACK_DB = AsyncBlackjackGameDB(USER_DB)
 app = FastAPI(
     title="Blackjack Server",
     description="Implementation of a simultaneous multi-game Blackjack server by[Your name here]."
@@ -31,7 +33,7 @@ async def home():
 @app.get('/game/create/{num_players}', status_code=status.HTTP_201_CREATED)
 async def create_game(num_players: int = Path(..., gt=0, description='the number of players'),
                       num_decks: Optional[int] = Query(2, description='the number of decks to use')):
-    new_uuid, new_term_pass = await BLACKJACK_DB.add_game(num_players=num_players, num_decks=num_decks)
+    new_uuid, new_term_pass, game_owner = await BLACKJACK_DB.add_game(num_players=num_players, num_decks=num_decks)
     return {'success': True, 'game_id': new_uuid, 'termination_password': new_term_pass}
 
 
@@ -43,14 +45,7 @@ async def init_game(game_id: str = Path(..., description='the unique game id')):
     return {'success': True, 'dealer_stack': dealer_stack, 'player_stacks': player_stacks}
 
 
-@app.get('/game/{game_id}/stacks')
-async def get_stacks(game_id: str = Path(..., description='the unique game id')):
-    the_game = await get_game(game_id)
-    dealer_stack, player_stacks = the_game.get_stacks()
-    return {'success': True, 'dealer_stack': dealer_stack, 'player_stacks': player_stacks}
-
-
-@app.post('/game/{game_id}/player/{player_idx}/hit')  # TODO: change to POST before sending out
+@app.post('/game/{game_id}/player/{player_idx}/hit')
 async def player_hit(game_id: str = Path(..., description='the unique game id'),
                      player_idx: int = Path(..., description='the player index (zero-indexed)')):
     the_game = await get_game(game_id)
@@ -68,7 +63,7 @@ async def player_stack(game_id: str = Path(..., description='the unique game id'
             'player_stack': the_game.get_stacks()[1][player_idx]}
 
 
-@app.post('/game/{game_id}/dealer/play')  # TODO: change to POST before sending out
+@app.post('/game/{game_id}/dealer/play')
 async def dealer_play(game_id: str = Path(..., description='the unique game id')):
     the_game = await get_game(game_id)
     dealer_stop = the_game.dealer_draw()
@@ -97,4 +92,5 @@ async def delete_game(game_id: str = Path(..., description='the unique game id')
 
 if __name__ == '__main__':
     # running from main instead of terminal allows for debugger
+    # TODO: modify the below to add HTTPS (SSL/TLS) support
     uvicorn.run('web_blackjack:app', port=8000, log_level='info', reload=True)

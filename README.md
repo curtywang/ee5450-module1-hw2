@@ -19,10 +19,10 @@ authentication middleware to your Web API and Blackjack game database.
 To get started, make sure all packages in `requirements.txt` are installed: `conda install --file requirements.txt`
 
 Then, open up `user_db.py` and `test_user_db.py`.  The `UserDB` class consists of methods to create accounts and perform
-authentication checks.  We will also modify `blackjack_db.py` so that the `AsyncBlackjackGameDB` class contains 
-interfaces for adding and checking permissions through `UserDB`.  Finally, we will modify `web_blackjack.py` with the
-paths below so that we can create user accounts and all game calls marked with `AUTH REQUIRED` are authenticated 
-and restricted properly.
+authentication checks.  I have modified `blackjack_db.py` so that the `AsyncBlackjackGameDB` class contains 
+interfaces for adding a game owner through a `UserDB` object.  Finally, we will modify `web_blackjack.py` 
+with the paths below so that we can create user accounts and all game calls marked with `AUTH REQUIRED` are 
+authenticated and restricted properly.
 
 To save time, we will not be creating sessions (logging whether a user is logged in or not).  Instead, we will just
 request that every API call be authenticated; thus, you will be passing HTTP Basic authentication headers, which 
@@ -47,8 +47,6 @@ Just returns a friendly message.
 ## create_user()
 ```
 POST /user/create?username=
-
-AUTH REQUIRED
 returns: {'success': True, 'username': <the_username>, 'password': <the_password>}
 ```
 Asks the UserDB object to create a new user with the username `the_username`, or return an HTTP 400 error that specifies
@@ -61,8 +59,8 @@ AUTH REQUIRED
 returns: {'success': True, 'game_id': game_uuid, 'termination_password': the_password, 'game_owner': <owner_username>}
 ```
 Asks the database object to create a new game `game_id`, then returns the UUID of the game in the `game_id` key 
-and the password needed for termination in the `termination_password` key.  The game's owner will be taken from
-the HTTPBasicCredentials object passed in through HTTP Basic Auth.
+and the password needed for termination in the `termination_password` key.  The game's owner is always the first player
+and the username will be taken from the HTTPBasicCredentials object passed in through HTTP Basic Auth.
 
 ## add_player_to_game()
 ```
