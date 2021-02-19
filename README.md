@@ -5,7 +5,7 @@ Securing and Authenticating your FastAPI-based Web API for Multi-user, Multi-gam
 
 In this assignment, you'll be making adding HTTPS/TLS support and user authentication (account creation/login) to your 
 Blackjack server Web API.  To facilitate this, I've created a folder named `keys` where you should put your self-signed 
-public/private keys made with [mkcert](https://github.com/FiloSottile/mkcert/releases).  The public certificate 
+public/private keys made with [mkcert](https://github.com/FiloSottile/mkcert/releases), run on the Miniforge Prompt.  The public certificate 
 should be named `public.pem` and the private key should be named `private.pem`.  Generally, you should not add these to
 Git, so make sure you do not accidentally add them as part of the changes (the gitignore should prevent them from being) 
 added.  Once you have added these, add the appropriate commands to the `uvicorn.run()` call at the end of 
