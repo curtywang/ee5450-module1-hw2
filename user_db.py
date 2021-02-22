@@ -17,7 +17,7 @@ class UserDB(object):
 
         To make hashes, read: https://pynacl.readthedocs.io/en/latest/password_hashing/
         In particular, you want to use the nacl.pwhash.str() function.
-        NOTE: str expects passwords in bytes!  Use the str type's encode() function
+        NOTE: pwhash.str() expects passwords in bytes!  Use the str type's encode() function
         or the bytes type's decode() function to help you convert.
 
         :raises: ValueError if the username already exists
