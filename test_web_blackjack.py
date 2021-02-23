@@ -149,9 +149,9 @@ def test_get_winners(get_dealer_won_game, base_client):
     assert resp_json['winners'][0] in ['NONE', 'DEALER', 'PLAYER']
 
 
-def test_delete_game(get_dealer_won_game, base_user, base_user2, base_client):
+def test_delete_game(get_dealer_won_game, base_user, base_user2, get_base_game, base_client):
     game_id = get_dealer_won_game['game_id']
-    term_pass = get_dealer_won_game['termination_password']
+    term_pass = get_base_game['termination_password']
     resp = base_client.post(f'/game/{game_id}/terminate', auth=base_user)
     assert resp.status_code == 422
     resp = base_client.post(f'/game/{game_id}/terminate?password=fail', auth=base_user)
