@@ -66,7 +66,7 @@ and the username will be taken from the HTTPBasicCredentials object passed in th
 
 ## add_player_to_game()
 ```
-GET /game/{game_id}/add_player?username=
+POST /game/{game_id}/add_player?username=
 AUTH REQUIRED
 returns: {'success': True, 'game_id': game_uuid, 'player_username': player_username, 'player_idx': player_idx}
 ```
