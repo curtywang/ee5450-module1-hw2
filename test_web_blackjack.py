@@ -57,20 +57,20 @@ def get_empty_game(base_client, base_user):
     return resp_json
 
 
-def test_add_player(get_empty_game, base_user, base_user2, base_client):
-    game_id = get_empty_game['game_id']
-    response = base_client.post(f'/game/{game_id}/add_player?username={TEST_USER2}', auth=base_user)
-    resp = response.json()
-    assert resp['game_id'] == game_id
-    assert resp['player_username'] == base_user2.username
-    assert 'player_idx' in resp
-
-
 @pytest.fixture
 def get_base_game(base_client, base_user, base_user2):
     response = base_client.get('/game/create/2', auth=base_user)
     game_resp = response.json()
     return game_resp
+
+
+def test_add_player(get_base_game, base_user, base_user2, base_client):
+    game_id = get_base_game['game_id']
+    response = base_client.post(f'/game/{game_id}/add_player?username={TEST_USER2}', auth=base_user)
+    resp = response.json()
+    assert resp['game_id'] == game_id
+    assert resp['player_username'] == base_user2.username
+    assert 'player_idx' in resp
 
 
 @pytest.fixture
