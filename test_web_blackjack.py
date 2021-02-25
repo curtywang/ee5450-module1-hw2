@@ -4,7 +4,9 @@ from requests.auth import HTTPBasicAuth
 from web_blackjack import app
 
 TEST_USER = 'testah'
+test_user_initialized = False
 TEST_USER2 = 'playah'
+test_user2_initialized = False
 
 
 @pytest.fixture
@@ -13,7 +15,7 @@ def base_client():
 
 
 def test_create_user(base_client):
-    response = base_client.post(f'/user/create?username={TEST_USER}')
+    response = base_client.post(f'/user/create?username=magick')
     resp = response.json()
     assert 'username' in resp
     assert 'password' in resp
@@ -21,18 +23,22 @@ def test_create_user(base_client):
 
 @pytest.fixture
 def base_user(base_client):
-    response = base_client.post(f'/user/create?username={TEST_USER}')
-    resp = response.json()
-    tester_auth = HTTPBasicAuth(username=resp['username'], password=resp['password'])
-    return tester_auth
+    global test_user_initialized
+    if not test_user_initialized:
+        response = base_client.post(f'/user/create?username={TEST_USER}')
+        resp = response.json()
+        test_user_initialized = HTTPBasicAuth(username=resp['username'], password=resp['password'])
+    return test_user_initialized
 
 
 @pytest.fixture
 def base_user2(base_client):
-    response = base_client.post(f'/user/create?username={TEST_USER2}')
-    resp = response.json()
-    tester_auth = HTTPBasicAuth(username=resp['username'], password=resp['password'])
-    return tester_auth
+    global test_user2_initialized
+    if not test_user2_initialized:
+        response = base_client.post(f'/user/create?username={TEST_USER2}')
+        resp = response.json()
+        test_user2_initialized = HTTPBasicAuth(username=resp['username'], password=resp['password'])
+    return test_user2_initialized
 
 
 def test_home(base_client):
@@ -57,20 +63,20 @@ def get_empty_game(base_client, base_user):
     return resp_json
 
 
-def test_add_player(get_empty_game, base_user, base_user2, base_client):
-    game_id = get_empty_game['game_id']
-    response = base_client.post(f'/game/{game_id}/add_player?username={TEST_USER2}', auth=base_user)
-    resp = response.json()
-    assert resp['game_id'] == game_id
-    assert resp['player_username'] == base_user2.username
-    assert 'player_idx' in resp
-
-
 @pytest.fixture
 def get_base_game(base_client, base_user, base_user2):
     response = base_client.get('/game/create/2', auth=base_user)
     game_resp = response.json()
     return game_resp
+
+
+def test_add_player(get_base_game, base_user, base_user2, base_client):
+    game_id = get_base_game['game_id']
+    response = base_client.post(f'/game/{game_id}/add_player?username={TEST_USER2}', auth=base_user)
+    resp = response.json()
+    assert resp['game_id'] == game_id
+    assert resp['player_username'] == base_user2.username
+    assert 'player_idx' in resp
 
 
 @pytest.fixture
